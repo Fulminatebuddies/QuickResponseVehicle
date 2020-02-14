@@ -1,12 +1,14 @@
 #include <avr/io.h>
 #include <util/delay.h>
 
-#define N_1    (_BV(CS00))
-#define N_8    (_BV(CS01))
-#define N_64   (_BV(CS01)|_BV(CS00))
-#define N_256  (_BV(CS02))
-#define N_1024 (_BV(CS02)|_BV(CS00))
+#define N_1    (_BV(CS00))     //No prescaler i.e N = 1
+#define N_8    (_BV(CS01))     //Prescaler N = 8   
+#define N_64   (_BV(CS01)|_BV(CS00)) //Prescaler N = 64
+#define N_256  (_BV(CS02))  //Prescaler N = 256
+#define N_1024 (_BV(CS02)|_BV(CS00))  //Prescaler N = 1024
 
+
+// To calculate frequency of PWM use the formula given in datasheet (F = fclk / N * 256)
 static void pwm_init(void)
 {
     DDRB |= _BV(PB0); // set PWM pin as OUTPUT
@@ -42,7 +44,6 @@ int main(void)
     pwm_set_duty(duty);
     /* loop */
     while (1) {
-        //pwm_set_duty(duty++);
-        //_delay_ms(100);
+
     }
 }
