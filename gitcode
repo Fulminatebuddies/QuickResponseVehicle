@@ -1,0 +1,7 @@
+// To configure the Proxy Server for Github
+git config --global http.proxy http://username:password@proxiURL:proxiPort
+git config --global https.proxy http://username:password@proxiURL:proxiPort
+git config --global http.sslVerify false
+// To Pull the Contents from Github
+git pull --allow-unrelated-histories origin master
+
