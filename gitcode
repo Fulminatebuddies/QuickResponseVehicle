@@ -1,3 +1,9 @@
+// To add the new files for commiting 
+git add .
+// To commit the files on github
+git commit -m "FILE_NAME"
+// To PUSH the file on github
+git push origin master
 // To configure the Proxy Server for Github
 git config --global http.proxy http://username:password@proxiURL:proxiPort
 git config --global https.proxy http://username:password@proxiURL:proxiPort
