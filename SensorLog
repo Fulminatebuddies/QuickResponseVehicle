@@ -1,0 +1,24 @@
+DATE: 22/02/2020
+CLASS Low Pass Filter Configuration {
+  resistor = 10kOhm
+  Capacitor = 10uF
+}
+CLASS Arduino Pin Configuration {
+  PWM Pin = D3
+  PWM Analog Write = 150
+  Analog Read Pin = A0
+  Analog Read Value ~= 500
+  
+  Changing PWM { // TODO: Check per inc. or dec. value of PWM
+    if INC
+      Analog Read Value ~= 900
+    else if DEC
+      Analog Read Value ~= 300
+  }
+}
+CLASS Room Setting {
+  Time = 19:00
+  Lighting Condition = Tubelight
+}
+
+  
