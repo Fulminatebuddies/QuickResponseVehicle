@@ -44,6 +44,14 @@ uart_getc(void)
     return (-1);
 #endif /* !UART_RX_ENABLED */
 }
+void uart_putu(uint16_t x)
+{
+        char buff[8] = {0};
+        char *p = buff+6;
+        do { *(p--) = (x % 10) + '0'; x /= 10; } while(x);
+        uart_puts((const char *)(p+1));
+}
+
 
 void
 uart_putc(char c)

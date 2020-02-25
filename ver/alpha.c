@@ -1,7 +1,7 @@
 #include <avr/io.h>
 #include <util/delay.h>
 #include <avr/interrupt.h>
-#include "lib/libsoftwareuart.h"
+#include "../lib/libsoftwareuart.h"
 
 int main(void)
 {

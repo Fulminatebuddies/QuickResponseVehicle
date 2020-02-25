@@ -30,6 +30,7 @@
 
 char uart_getc();
 void uart_putc(char c);
+void uart_putu(uint16_t x);
 void uart_puts(const char *s);
 
 #endif	/* !_UART_H_ */
