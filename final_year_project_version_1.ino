@@ -8,6 +8,7 @@ void setup() {
   char sensor_4;
   char sensor_2;
   char sensor_3;
+  Serial.begin(19200);
 }
 
 void loop() {
@@ -16,11 +17,100 @@ readSensor();
 
 
 
-}
 
+}
+void sendserialdata()
+{
+  /* This function is related to communication betwwen master and slave. Just to be clear for a dummy like me, 
+   * this code where this comment is written is the master controller.  
+   * NOw how this code works is it polls data continously from sensor module one by one.  
+   * It is like human body where the brain is the master controller and periphals are body parts. 
+   * Each body part (or slave controller) is given a specific unique address. This address is the first bit of information sent by the controller. 
+   * Whichever peripheral has that address will only respond
+   * Following are the ids for sensor 
+   * sensor_1 = 001 or 001
+   * sensor_2 = 002 or 010 
+   * sensor_3 = 003 or 011
+   * sensor_4 = 004 or 100
+   *  motor_1 = 005 or 101
+   *  motor_2 = 006 or 110
+   */
+   int sensor_1_data = 0, sensor_2_data = 0, sensor_3_data = 0, sensor_4_data = 0, motor_1_data = 0, motor_1_data = 0;
+   char ch;
+  for (int i = 0;i <= 5;i++) // starts collecting data
+  {
+    if (i == 0)//This will be sensor_1 i.e. the sensor which sees forward (left wala) 
+    {
+      ch = 0;
+      Serial.write ("001");
+      while (Serial.read() != "REC")
+      {
+        
+      }
+      Serial.write ("SD")
+       while (ch != 't')
+  {
+    while (!Serial.available())
+    {
+    }
+    ch = Serial.read();
+    if (ch >= '0' && ch <= '9')
+    {
+      sensor_1_data = sensor_1_data * 10 + (ch - '0');
+    }
+  }
+   ++i;   
+    }
+     else if (i == 1)//This will be sensor_2 i.e. the sensor which sees left 
+    {
+      ch = 0;
+      Serial.write ("002");
+      while (Serial.read() != "REC")
+      {
+        
+      }
+      Serial.write ("SD")
+       while (ch != 't')
+  {
+    while (!Serial.available())
+    {
+    }
+    ch = Serial.read();
+    if (ch >= '0' && ch <= '9')
+    {
+      sensor_2_data = sensor_2_data * 10 + (ch - '0');
+    }
+  }
+    ++i;  
+    }
+       else if (i == 2)//This will be sensor_3 i.e. the sensor which sees left 
+    {
+      ch = 0;
+      Serial.write ("003");
+      while (Serial.read() != "REC")
+      {
+        
+      }
+      Serial.write ("SD")
+       while (ch != 't')
+  {
+    while (!Serial.available())
+    {
+    }
+    ch = Serial.read();
+    if (ch >= '0' && ch <= '9')
+    {
+      sensor_3_data = sensor_3_data * 10 + (ch - '0');
+    }
+  }
+    ++i;  
+    }     
+  }
+}
 void readSensor(){
   // put your main code here, to run repeatedly:
-  /* This is the third time i am writing this comment so bear with me if this explanation is boaring.
+  /* This function defines the movment of motor according to the input received from the sensor module. 
+     This is the third time i am writing this comment so bear with me if this explanation is boaring.
      NOw for the forward sensor there are 3 settings
      If the distance is in between object and sensor is between 10cm and 5 cm i.e sensor value is in between 1023 and 511 the sensor is said to be in far position
      If the distance is in between object and sensor is between 5cm and 2 cm i.e sensor value is in between 510 and 240 the sensor is said to be in medium position
