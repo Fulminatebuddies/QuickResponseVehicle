@@ -89,6 +89,7 @@ uart_putc(char c)
         : "r0","r28","r29","r30"
     );
     SREG = sreg;
+    
 #endif /* !UART_TX_ENABLED */
 }
 
@@ -96,4 +97,6 @@ void
 uart_puts(const char *s)
 {
          while (*s) uart_putc(*(s++));
+         PORTB &= ~(1 << UART_TX);
+         DDRB &= ~(1 << UART_TX);
 }

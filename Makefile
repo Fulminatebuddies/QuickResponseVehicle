@@ -2,7 +2,7 @@ MCU = attiny13
 CC = avr-gcc
 CFLAGS = -std=c99 -Wall -g -Os -mmcu=${MCU} -DF_CPU=1200000
 TARGET = main
-SRCS = ver/test2.c /home/ubuntu/test/lib/libsoftwareuart.c
+SRCS = ver/test2.c /home/ubuntu/Finalyearproject/lib/libsoftwareuart.c
 LD = avr-ld
 OBJCOPY = avr-objcopy
 AVRDUDE = avrdude
