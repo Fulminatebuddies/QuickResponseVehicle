@@ -3,35 +3,26 @@
 #include <avr/interrupt.h>
 #include "../lib/libsoftwareuart.h"
 
+char SerialBuffer[20];
+
 int main(void)
 {
   /* loop */
   while (1) {
-    while(ch!=t){
-      ch = uart_getc();
-      c[i] = ch;
-      i++;
+    serial_read();
+    if(SerialBuffer == "001"){
+      uart_puts("123t");
     }
-    c[i] = '\0';
-
-    // if(c=='2'){
-    //   c = uart_getc();
-    //   uart_putc(c);
-    //   uart_puts(" ICT");
-    //   uart_putc('\r');
-    //   uart_putc('\n');
-    //}
   }
 }
 
 void serial_read(void){
-  char SerialBuffer[20];
   char CurrentChar;
   int index = 0;
   while(CurrentChar!=t){
-    ch = uart_getc();
-    c[index] = ch;
+    CurrentChar = uart_getc();
+    SerialBuffer[index] = CurrentChar;
     index++;
   }
-  c[index] = '\0';
+  SerialBuffer[index] = '\0';
 }
