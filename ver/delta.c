@@ -6,6 +6,9 @@
 
 volatile int value;
 
+static void uart_puttemp(int value);
+static void system_init(void)
+
 void system_init(void)
 {
 	MCUCR &= ~(1<<ISC01);	// Trigger INT0 on rising edge
@@ -17,18 +20,21 @@ void system_init(void)
 
 }
 
-ISR(PCINT0_vect)
-{
-	uart_puts("801t");
-}
-
 int main(void)
 {
-
     IR_init();
     system_init();
-    while (1)
-    {
-
+    /* loop */
+    while (1) {
+      value = IR_read();
+      uart_puttemp(value);
+      _delay_ms(10);
     }
+}
+
+void uart_puttemp(int value)
+{
+	uart_puts("IR=");
+	uart_putu(value);
+	uart_putc('\n');
 }

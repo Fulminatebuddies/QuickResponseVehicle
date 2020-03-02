@@ -9,6 +9,7 @@
 
 void IR_init(void);
 int IR_read(void);
-int analog_read(uint8_t pin);
+int analog_read();
+void adc_init(uint8_t pin);
 
 #endif	/* !_LIBADC_H_ */
