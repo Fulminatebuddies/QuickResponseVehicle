@@ -2,19 +2,25 @@
 #include <util/delay.h>
 #include <avr/interrupt.h>
 #include "../lib/libsoftwareuart.h"
+#include "../lib/libadc.h"
+
+static void uart_puttemp(int value);
 
 int main(void)
 {
-    char c;
-    uart_puts("IC 1 Hello World!");
-    uart_putc('\r');
-    uart_putc('\n');
+    int value;
+    IR_init();
     /* loop */
     while (1) {
-       c = uart_getc();
-	uart_putc(c);
-	uart_puts(" IC1");
-	     uart_putc('\r');
-	     uart_putc('\n');
+      value = IR_read();
+      uart_puttemp(value);
+      _delay_ms(10);
     }
+}
+
+void uart_puttemp(int value)
+{
+	uart_puts("IR=");
+	uart_putu(value);
+	uart_putc('\n');
 }

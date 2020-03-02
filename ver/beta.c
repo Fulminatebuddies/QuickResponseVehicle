@@ -41,7 +41,7 @@ int analog_read(uint8_t pin)
 	uint8_t low, high;
 
 	switch(pin) {
-	      case PB2: ADMUX = _BV(MUX0); break; // ADC1
+	case PB2: ADMUX = _BV(MUX0); break; // ADC1
         case PB4: ADMUX = _BV(MUX1); break; // ADC2
         case PB3: ADMUX = _BV(MUX0)|_BV(MUX1); break; // ADC3
         case PB5: // ADC0
