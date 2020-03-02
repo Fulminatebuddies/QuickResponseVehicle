@@ -1,6 +1,6 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
-#include "libadc.h"
+#include "libnewadc.h"
 
 void IR_init(void)
 {

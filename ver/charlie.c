@@ -2,7 +2,7 @@
 #include <util/delay.h>
 #include <avr/interrupt.h>
 #include "../lib/libsoftwareuart.h"
-#include "../lib/libadc.h"
+#include "../lib/libnewadc.h"
 
 static void uart_puttemp(int value);
 

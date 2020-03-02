@@ -1,8 +1,8 @@
-MCU = attiny13
+MCU = attiny44
 CC = avr-gcc
-CFLAGS = -std=c99 -Wall -g -Os -mmcu=${MCU} -DF_CPU=1200000
+CFLAGS = -std=c99 -Wall -g -Os -mmcu=${MCU} -DF_CPU=1000000
 TARGET = main
-SRCS = ver/test.c ./lib/libsoftwareuart.c ./lib/libadc.c
+SRCS = uart44.c ./lib/libsoftwareuartfortyfour.c 
 LD = avr-ld
 OBJCOPY = avr-objcopy
 AVRDUDE = avrdude
