@@ -97,6 +97,7 @@ void
 uart_puts(const char *s)
 {
          while (*s) uart_putc(*(s++));
-         PORTB &= ~(1 << UART_TX);
          DDRB &= ~(1 << UART_TX);
+         PORTB &= ~(1 << UART_TX);
+         
 }
