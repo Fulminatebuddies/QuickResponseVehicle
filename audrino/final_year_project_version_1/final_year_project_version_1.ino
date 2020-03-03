@@ -18,34 +18,38 @@ void setup() {
   pinMode (12, INPUT_PULLUP); //Sensor_2
   pinMode (11, INPUT_PULLUP); //Sensor_3
   pinMode (10, INPUT_PULLUP); //Sensor_4
+  pinMode (7, OUTPUT); //MOTor HOtline signal  
+  pinMode (6, OUTPUT); //MOTor HOtline signal
+  digitalWrite (7, LOW); // signal intialize to 0 for motor
+  digitalWrite (6, LOW); // signal intialize to 0 for motor
   cli();
   PCICR |= 0b00000001;    // turn on port b
   PCMSK0 |= 0b00111100;       // to enable pb2 pb3 pb4 pb5
   PCIFR |= bit(PCIF0);
   sei();
+  pinMode (7, OUTPUT);
+  pinMode(6,OUTPUT);
 }
 
 void loop() {
   receiveserialdata();
   readSensor();
 }
-ISR (PCINT2_vect) { //Send command to motor to stop..
-  Serial.println("asa kaitari bhbau");
+ISR (PCINT0_vect) { //Send command to motor to stop..
+motorstop();
 }
-ISR (PCINT3_vect) {
-  Serial.println("asa kaitari bhbau");
-}
-ISR (PCINT4_vect) {
-  Serial.println("asa kaitari bhbau");
-}
-ISR (PCINT5_vect) {
-  Serial.println("asa kaitari bhbau");
-}
-void hotline()
+
+void motorstop()
 {
-  //let the hotline pin be pin number
+  //let the hotline pin be pin number 8 and 9 
 
-
+  digitalWrite (7, LOW); // signal intialize to 0 for motor
+  digitalWrite (6, LOW); // signal intialize to 0 for motor
+  digitalWrite (7, HIGH); // signal intialize to 1 for motor
+  digitalWrite (6, HIGH); // signal intialize to 1 for motor
+  delay(10);
+  digitalWrite (7, LOW); // signal intialize to 0 for motor
+  digitalWrite (6, LOW); // signal intialize to 0 for motor
 
 }
 
@@ -56,10 +60,11 @@ void receiveserialdata()
      NOw how this code works is it polls data continously from sensor module one by one.
      It is like human body where the brain is the master controller and periphals are body parts.
   */
-  Serial.println("Hello");
+  
+  
   //  // Lets start with sensor_1
   PCMSK0 &= 0b11011111;
-  //PCMSK0 |= 0b00011100;
+  PCIFR |= bit(PCIF0);
   pinMode (13, OUTPUT); // Sensor_1
   digitalWrite (13, LOW); //Interpt for sensor_1
   digitalWrite(13, HIGH);
@@ -68,55 +73,59 @@ void receiveserialdata()
   if (Serial.available() > 0)
     sensor_1_data = Serial.readStringUntil('t');
   sensor_value_1 = sensor_1_data.toInt();
+  Serial.println(sensor_1_data);
   serialFlush();
   pinMode (13, INPUT_PULLUP); // Sensor_1
   PCMSK0 |= 0b00111100;
   //now we are done with sensor_1 , lets go to sensor_2
 
-  // Lets start with sensor_2
- PCMSK0 &= 0b11101111;
-  pinMode (12, OUTPUT); //Sensor_2
-  digitalWrite (12, LOW); //Interpt for sensor_2
-  digitalWrite(12, HIGH);
-  delay(10);
-  //now the interpt has been set. the data should start coming
-  if (Serial.available() > 0)
-    sensor_2_data = Serial.readStringUntil('t');
-  sensor_value_2 = sensor_2_data.toInt();
-  serialFlush();
-  pinMode (12, INPUT_PULLUP); // Sensor_2
-  PCMSK0 |= 0b00111100;
-  //now we are done with sensor_2 , lets go to sensor_3
-
-  // Lets start with sensor_3
-  PCMSK0 &= 0b11110111;
-  pinMode (11, OUTPUT);
-  digitalWrite (11, LOW); //Interpt for sensor_3
-  digitalWrite(11, HIGH);
-  delay(10);
-  //now the interpt has been set. the data should start coming
-  if (Serial.available() > 0)
-    sensor_3_data = Serial.readStringUntil('t');
-  sensor_value_3 = sensor_3_data.toInt();
-  serialFlush();
-  pinMode (11, INPUT_PULLUP); // Sensor_3
-  PCMSK0 |= 0b00111100;
-  //now we are done with sensor_3 , lets go to sensor_4
-
-  // Lets start with sensor_4
-  PCMSK0 &= 0b11111011;
-  pinMode (10, OUTPUT);
-  digitalWrite (10, LOW); //Interpt for sensor_4
-  digitalWrite(10, HIGH);
-  delay(10);
-  //now the interpt has been set. the data should start coming
-  if (Serial.available() > 0)
-    sensor_4_data = Serial.readStringUntil('t');
-  sensor_value_4 = sensor_4_data.toInt();
-  serialFlush();
-  pinMode (10, INPUT_PULLUP); // Sensor_4
-  PCMSK0 |= 0b00111100;
-  //now we are done with sensor_4 , this was the last sensor.
+    // Lets start with sensor_2
+   PCMSK0 &= 0b11101111;
+    pinMode (12, OUTPUT); //Sensor_2
+    digitalWrite (12, LOW); //Interpt for sensor_2
+    digitalWrite(12, HIGH);
+    delay(10);
+    //now the interpt has been set. the data should start coming
+    if (Serial.available() > 0)
+      sensor_2_data = Serial.readStringUntil('t');
+    sensor_value_2 = sensor_2_data.toInt();
+    Serial.println(sensor_2_data);
+    serialFlush();
+    pinMode (12, INPUT_PULLUP); // Sensor_2
+    PCMSK0 |= 0b00111100;
+    //now we are done with sensor_2 , lets go to sensor_3
+  
+    // Lets start with sensor_3
+    PCMSK0 &= 0b11110111;
+    pinMode (11, OUTPUT);
+    digitalWrite (11, LOW); //Interpt for sensor_3
+    digitalWrite(11, HIGH);
+    delay(10);
+    //now the interpt has been set. the data should start coming
+    if (Serial.available() > 0)
+      sensor_3_data = Serial.readStringUntil('t');
+    sensor_value_3 = sensor_3_data.toInt();
+    Serial.println(sensor_3_data);
+    serialFlush();
+    pinMode (11, INPUT_PULLUP); // Sensor_3
+    PCMSK0 |= 0b00111100;
+    //now we are done with sensor_3 , lets go to sensor_4
+  
+    // Lets start with sensor_4
+    PCMSK0 &= 0b11111011;
+    pinMode (10, OUTPUT);
+    digitalWrite (10, LOW); //Interpt for sensor_4
+    digitalWrite(10, HIGH);
+    delay(10);
+    //now the interpt has been set. the data should start coming
+    if (Serial.available() > 0)
+      sensor_4_data = Serial.readStringUntil('t');
+    sensor_value_4 = sensor_4_data.toInt();
+    Serial.println(sensor_4_data);
+    serialFlush();
+    pinMode (10, INPUT_PULLUP); // Sensor_4
+    PCMSK0 |= 0b00111100;
+    //now we are done with sensor_4 , this was the last sensor.
 
 }
 void readSensor() {

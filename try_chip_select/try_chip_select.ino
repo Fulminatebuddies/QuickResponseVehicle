@@ -14,6 +14,7 @@ void loop() {
   //lets say this is the moiment you want the data to arrive
   //IC 1 STARTS
   digitalWrite (13, LOW); //801
+  delay(1);
   digitalWrite(13, HIGH);
   delay(10);
   //now the interpt has been set. the data should start coming
@@ -26,6 +27,7 @@ void loop() {
 
   //IC 2 STARTS
   digitalWrite (12, LOW); //102
+  delay(1);
   digitalWrite(12, HIGH);
   delay(10);
   //now the interpt has been set. the data should start coming
