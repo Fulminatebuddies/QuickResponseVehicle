@@ -13,18 +13,20 @@
 #include "../lib/libadc.h"
 #include "../lib/libpwm.h"
 
+#define IRBIAS_M (((4.50 - 0.03)/(254-0))*(1000))
+
 volatile uint16_t value =1;
 static void system_init(void);
-static void hotline();
+static void hotline();	//PB3 - Serial Tx
 uint8_t duty = 127;
 
 void system_init(void)
 {
 	MCUCR |= (1<<ISC01);	// Trigger INT0 on rising edge
-  	MCUCR |= (1<<ISC00);
+  MCUCR |= (1<<ISC00);
 	//PCMSK |= (1<<PCINT0);   // pin change mask: listen to portb, pin PB3
 	GIMSK |= (1<<INT0); // enable PCINT interrupt on PB1
-  	GIFR |= (1<<INTF0);
+  GIFR |= (1<<INTF0);
 	sei();          // enable all interrupts
 	DDRB  &= ~(1<<PB1);
 
@@ -55,15 +57,18 @@ void hotline(){
 
 int main(void)
 {
-  	IR_init();
-  	system_init();
+  IR_init();
+  system_init();
 	pwm_setup();
 	_delay_ms(5000);
-	duty = 254;
+	duty = 100;
 	pwm_set_duty(duty);
   	/* loop */
-  	while (1) {
+  while (1) {
 		value = IR_read();
+		uart_putu(value);
+		uart_putc('\n');
+		_delay_ms(10);
 		if(value < 600){
 			//hotline();
 		}
