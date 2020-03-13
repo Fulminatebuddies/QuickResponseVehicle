@@ -1,12 +1,18 @@
 #include <avr/interrupt.h>
+#include <LowPower.h>
 int sensor_value_1;
 int sensor_value_2;
 int sensor_value_3;
 int sensor_value_4;
+int motor_1_encoder_value;
+int motor_2_encoder_value;
+int difference_encoder_value;
 String sensor_1_data;
 String sensor_2_data;
 String sensor_3_data;
 String sensor_4_data;
+String motor_1_data;
+String motor_2_data;
 int sensor_1;
 int sensor_2;
 int sensor_3;
@@ -33,7 +39,8 @@ void setup() {
 
 void loop() {
   receiveserialdata();
-  readSensor();
+  categorize_data();
+  moving_of_vehicle();
 }
 ISR (PCINT0_vect) { //Send command to motor to stop..
 motorstop();
@@ -51,6 +58,11 @@ void motorstop()
   digitalWrite (7, LOW); // signal intialize to 0 for motor
   digitalWrite (6, LOW); // signal intialize to 0 for motor
 
+}
+
+void check_for_interrupt ()
+{
+  
 }
 
 void receiveserialdata()
@@ -128,10 +140,10 @@ void receiveserialdata()
     //now we are done with sensor_4 , this was the last sensor.
 
 }
-void readSensor() {
+void categorize_data() {
   // put your main code here, to run repeatedly:
   /* This function defines the movment of motor according to the input received from the sensor module.
-     This is the third time i am writing this comment so bear with me if this explanation is boaring.
+     This is the third time i am writing this comment and reading it the 100th time so bear with me if this explanation is boaring.
      NOw for the forward sensor there are 3 settings
      If the distance is in between object and sensor is between 10cm and 5 cm i.e sensor value is in between 1023 and 511 the sensor is said to be in far position
      far = 3
@@ -194,6 +206,49 @@ void readSensor() {
   {
     sensor_3 = 1;
   }
+
+}
+
+void moving_of_vehicle()
+{
+
+ /* This first condition is when it is a open space that is the path has no constraints.
+  *  So here the code will eneter a new loop which will run in infinite times unless hotline condition occures, and when it does the 
+  *  controller goes in kind of reset condition. Function of this Hotline is explained in the function itself.
+  *  
+  *  
+  *  
+  *  
+  *                                 ******************************************
+  *                                 *                                        * 
+  *                                 *                                        *   
+  *                                 *                                        *
+  *                                 *                                        *   
+  *                                 *                                        * 
+  *                                 *                                        *
+  *                                 *                                        * 
+  *                                 *                                        * 
+  *                                 *                                        * 
+  *                                 *                                        * 
+  *                                 *                                        * 
+  *                                 *                                        * 
+  *                                 *                                        * 
+  *                                 *                                        * 
+  *                                 *                                        * 
+  *                                 *               ^^                       *     
+  *                                 *                                        * 
+  *                                 *                                        * 
+  *                                 ******************************************                                       
+  *                                 
+  *                                 
+  *  
+  */
+
+   if ( sensor_1 == 3 && sensor_4 ==3 && sensor_2 == 1 && sensor_3 == 1 )
+   {
+    freeloop();
+   }
+  
   /* now lets explore conditions where the bot has to make decisions
     First lets start with staright condition
     Depending upon the condition of sensor lets decide the speed of motor.
@@ -327,6 +382,73 @@ void readSensor() {
   {
     // Simply take a left turn
   }
+}
+
+void freeloop()
+{
+  //So we know for a fact that there are no restrictions on path. Lets take this opportunity to make motor go on full speed. 
+  //IN this loop the vehicle will run unless it gets hotline condition.
+// For the very first condition lets get the motors running .
+// First data packet for each module is the id of that motor 
+// 001 for left motor
+// 011 for the right motor 
+Serial.write ("001"); // ID for left motor
+Serial.write("t");
+Serial.write ("M Max S"); //This stands for "Motor Max Speed"
+Serial.write("t");
+Serial.write("tt");
+Serial.write ("011"); // ID for motor right motor
+Serial.write("t");
+Serial.write ("M Max S"); //This stands for "Motor Max Speed"
+Serial.write("tt");
+LowPower.powerDown(SLEEP_FOREVER, ADC_OFF, BOD_OFF); 
+//  while (1)
+//  {
+//    //motor should start running at max speed
+//    for (int i= 1; i<=5 ; i++)
+//    {
+//    Serial.write ("001"); // ID for left motor
+//    Serial.write("t");
+//    Serial.write("S ME D"); //Stands for "Send Motor Encoder Data"
+//    Serial.write("t");
+//     if (Serial.available() > 0)
+//      motor_1_data = Serial.readStringUntil('t');
+//    motor_1_encoder_value_i = motor_1_data.toInt();
+//    Serial.write ("011"); // ID for right motor
+//    Serial.write("t");
+//    Serial.write("S ME D"); //Stands for "Send Motor Encoder Data"
+//    Serial.write("t");
+//     if (Serial.available() > 0)
+//      motor_2_data = Serial.readStringUntil('t');
+//    motor_2_encoder_value = motor_2_data.toInt();
+//   difference_encoder_value_i = motor_2_encoder_value - motor_2_encoder_value
+//   //now the difference indicates which motor will move more 
+//    }
+//     motor_2_encoder_value = motor_2_encoder_value_1 + motor_2_encoder_value_2 + motor_2_encoder_value_3 + motor_2_encoder_value_4 + motor_2_encoder_value_5;
+//     motor_1_encoder_value = motor_1_encoder_value_1 + motor_1_encoder_value_2 + motor_1_encoder_value_3 + motor_1_encoder_value_4 + motor_1_encoder_value_5;  
+//  int temp = 0;
+//  int x = 2000; // Assuming 2k is the [max rpm - 500 (a compensation factor) ] of motor 
+//  int y;
+//  temp = motor_2_encoder_value - motor_1_encoder_value;
+//  
+//  y = x + temp
+//  if (temp > 0)
+//  {
+//    Serial.write("001");
+//    Serial.write("t");
+//    Serial.write("T RPM"); // Stands for "Take RPM"
+//    Serial.write("t");
+//    Serial.write(y);
+//    Serial.write("t");
+//    Serial.write("011");
+//    Serial.write("t");
+//    Serial.write("T RPM"); // Stands for "Take RPM"
+//    Serial.write("t");
+//    Serial.write(x);
+//    Serial.write("t");
+//  }
+//     
+//  }
 }
 
 void serialFlush() {
