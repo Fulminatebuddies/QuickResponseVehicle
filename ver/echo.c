@@ -1,12 +1,24 @@
+/*
+	PB0 - PWM
+	PB1 - Interrupt based Half Duplex Rx / Hotline
+	PB2 - ADC for IR Rx
+	PB3 - Serial Tx
+	PB4 - IR Tx
+	PB5 - Reset
+*/
 #include <avr/io.h>
 #include <util/delay.h>
 #include <avr/interrupt.h>
 #include "../lib/libsoftwareuart.h"
 #include "../lib/libadc.h"
+#include "../lib/libpwm.h"
+
+#define IRBIAS_M (((4.50 - 0.03)/(254-0))*(1000))
 
 volatile uint16_t value =1;
 static void system_init(void);
-static void hotline();
+static void hotline();	//PB3 - Serial Tx
+uint8_t duty = 127;
 
 void system_init(void)
 {
@@ -47,12 +59,18 @@ int main(void)
 {
   IR_init();
   system_init();
-  /* loop */
+	pwm_setup();
+	_delay_ms(5000);
+	duty = 100;
+	pwm_set_duty(duty);
+  	/* loop */
   while (1) {
 		value = IR_read();
-  	//_delay_ms(10);
+		uart_putu(value);
+		uart_putc('\n');
+		_delay_ms(10);
 		if(value < 600){
-			hotline();
+			//hotline();
 		}
   }
 }

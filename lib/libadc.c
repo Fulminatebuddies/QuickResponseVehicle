@@ -6,6 +6,8 @@ void IR_init(void)
 {
 	DDRB &= ~_BV(IR_DATA_PIN); // set data pin as INPUT
 	adc_init(IR_DATA_PIN);
+	DDRB |= (1<<PB4);
+	PORTB |= (1<<PB4);
 }
 
 int IR_read(void)

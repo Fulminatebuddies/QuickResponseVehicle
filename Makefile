@@ -2,10 +2,11 @@ MCU = attiny13
 CC = avr-gcc
 CFLAGS = -std=c99 -Wall -g -Os -mmcu=${MCU} -DF_CPU=1200000
 TARGET = main
-SRCS = ver/charlie.c ./lib/libsoftwareuart.c ./lib/libadc.c 
+SRCS = ver/echo.c ./lib/libsoftwareuart.c ./lib/libadc.c ./lib/libpwm.c
 LD = avr-ld
 OBJCOPY = avr-objcopy
 AVRDUDE = avrdude
+VAR_LOCAL = "default"
 
 all:
 	${CC} ${CFLAGS} -o ${TARGET}.o ${SRCS}
@@ -17,3 +18,10 @@ flash:
 
 clean:
 	rm -f *.c~ *.o *.elf *.hex
+
+one: 
+	@grep "#include \"" ${SRCS} > tmp; sed -e 's/\(^.*\.\.\)\(.*\)\(".*$ \)/\2/' tmp > tmp1 ; sed -i 's/.h/.c/g' tmp1 ; sed -i 's/\//\.\//1' tmp1; cat tmp1 | xargs > oneline.txt;
+	cat oneline.txt;
+
+        #$(eval VAR_LOCAL := $(shell cat oneline.txt))
+
